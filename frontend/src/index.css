@@ -1,0 +1,87 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+@layer base {
+  body {
+    @apply bg-[#020617] text-slate-200 antialiased selection:bg-emerald-500/30 selection:text-emerald-400;
+  }
+}
+
+@layer utilities {
+  .animate-spin-slow {
+    animation: spin 8s linear infinite;
+  }
+
+  @keyframes shine {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+}
+
+/* Custom Scrollbar - Futuristic */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-dark;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-white/10 rounded-full hover:bg-emerald-600 transition-colors border-2 border-dark;
+}
+
+.glass-card {
+  @apply bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)];
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  @apply border-emerald-500/20 bg-white/[0.07] shadow-[0_30px_70px_rgba(16,185,129,0.1)];
+}
+
+.primary-gradient {
+  @apply bg-gradient-to-br from-emerald-400 via-teal-500 to-emerald-700;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(16, 185, 129, 0.2);
+  border-radius: 10px;
+}
+
+/* Futuristic Heading Glow */
+.glow-text {
+  text-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+}
+
+/* Hide horizontal scroll for main */
+body {
+  overflow-x: hidden;
+}
+
+/* Tooltip custom style */
+[data-tooltip] {
+  position: relative;
+}
+
+[data-tooltip]:before {
+  content: attr(data-tooltip);
+  @apply absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1 bg-dark-accent text-[10px] font-black uppercase tracking-widest text-emerald-400 rounded-lg opacity-0 invisible transition-all border border-emerald-500/30;
+}
+
+[data-tooltip]:hover:before {
+  @apply opacity-100 visible -top-12;
+}
