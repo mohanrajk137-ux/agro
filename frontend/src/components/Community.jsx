@@ -83,6 +83,34 @@ const Community = ({ lang }) => {
           </AnimatePresence>
         </div>
       </div>
+
+      {/* Equipment Sharing Hub */}
+      <h2 className="text-xl font-semibold mb-6 mt-16 flex items-center gap-2">
+        <span className="w-8 h-1 bg-emerald-500 rounded-full"></span>
+        {lang === 'en' ? 'Equipment Sharing Hub' : 'உபகரணங்கள் பகிர்வு மையம்'}
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {[
+          { name: 'Mahindra Tractor 575', owner: 'Ramesh K.', price: '₹800/hr', status: 'Available', img: 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&q=80&w=400' },
+          { name: 'Rotavator', owner: 'Velu P.', price: '₹300/hr', status: 'In Use', img: 'https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&q=80&w=400' }
+        ].map((eq, i) => (
+          <motion.div key={i} whileHover={{ scale: 1.02 }} className="glass-card p-4 border-white/5 flex gap-4">
+             <div className="w-24 h-24 rounded-2xl overflow-hidden bg-white/5">
+                <img src={eq.img} alt={eq.name} className="w-full h-full object-cover" />
+             </div>
+             <div className="flex-1 flex flex-col justify-between">
+                <div>
+                   <h4 className="font-black text-white text-lg">{eq.name}</h4>
+                   <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">{eq.owner}</p>
+                </div>
+                <div className="flex items-center justify-between mt-2">
+                   <span className="text-emerald-400 font-black">{eq.price}</span>
+                   <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-md ${eq.status === 'Available' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}`}>{eq.status}</span>
+                </div>
+             </div>
+          </motion.div>
+        ))}
+      </div>
     </div>
   );
 };

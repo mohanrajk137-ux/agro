@@ -55,11 +55,16 @@ const WeatherMarket = ({ lang }) => {
           </div>
         </div>
 
-        <div className="p-6 bg-emerald-500/5 rounded-3xl border border-emerald-500/20 relative overflow-hidden group/advice z-10">
-          <Activity size={16} className="text-emerald-400 mb-3" />
+        <div className="p-6 bg-emerald-500/5 rounded-3xl border border-emerald-500/20 relative overflow-hidden group/advice z-10 mt-6">
+          <div className="flex items-center gap-2 text-emerald-400 mb-3">
+            <Droplets size={16} />
+            <span className="text-[10px] font-black uppercase tracking-widest">{lang === 'en' ? 'Predictive Irrigation Alert' : 'முன்னறிவிப்பு நீர்ப்பாசன எச்சரிக்கை'}</span>
+          </div>
           <p className="text-xs text-slate-400 leading-relaxed font-medium">
-            <span className="text-emerald-400 font-black mr-2 uppercase tracking-widest">{lang === 'en' ? 'ADVICE:' : 'குறிப்பு:'}</span>
-            {WEATHER_DATA.advice[lang]}
+            <strong className="text-white">STATUS: </strong>
+            {lang === 'en' 
+              ? 'Soil moisture is optimal due to recent humidity. NO IRRIGATION REQUIRED today. Conserve water reserves.' 
+              : 'சமீபத்திய ஈரப்பதம் காரணமாக மண்ணின் ஈரப்பதம் உகந்ததாக உள்ளது. இன்று நீர்ப்பாசனம் தேவையில்லை.'}
           </p>
         </div>
       </motion.div>

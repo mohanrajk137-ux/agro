@@ -35,37 +35,60 @@ const ChatBot = ({ lang }) => {
   };
 
   const generateResponse = (query) => {
-    // Simple mock logic
-    if (query.includes('hello') || query.includes('hi') || query.includes('வணக்கம்')) {
-      return lang === 'en' ? 'Hi there! You can ask me about diseases, fertilizers, or seasonal tips.' : 'வணக்கம்! நோய்கள், உரங்கள் அல்லது பருவகால குறிப்புகளைப் பற்றி நீங்கள் என்னிடம் கேட்கலாம்.';
+    const lowerQuery = query.toLowerCase();
+
+    // 1. Greetings
+    if (lowerQuery.match(/\b(hi|hello|hey|வணக்கம்)\b/)) {
+      return lang === 'en' 
+        ? 'Hello! I can help you with crop diseases, fertilizers, market prices, and government subsidies. What do you need?'
+        : 'வணக்கம்! பயிர் நோய்கள், உரங்கள், சந்தை விலை மற்றும் அரசு மானியங்கள் பற்றி நான் உதவ முடியும். உங்களுக்கு என்ன வேண்டும்?';
     }
-    
-    // Search in crop data
-    const foundCrop = CROPS.find(c => query.includes(c.name.en.toLowerCase()) || query.includes(c.name.ta.toLowerCase()));
-    
+
+    // 2. Fertilizers
+    if (lowerQuery.match(/(fertilizer|urea|dap|npk|potash|ssp|உரம்|யூரியா)/)) {
+      return lang === 'en'
+        ? 'For optimal growth, use NPK for balanced nutrients, Urea for Nitrogen, and DAP for Phosphorus. You can check the "Fertilizer Hub" in the Explore menu for precise guidelines.'
+        : 'சிறந்த வளர்ச்சிக்கு, NPK, யூரியா மற்றும் DAP ஐப் பயன்படுத்தவும். துல்லியமான வழிகாட்டுதல்களுக்கு "உர மையம்" பக்கத்தைப் பார்க்கவும்.';
+    }
+
+    // 3. Government Subsidies / Portal
+    if (lowerQuery.match(/(scheme|subsidy|government|portal|pm kisan|மானியம்|திட்டம்)/)) {
+      return lang === 'en'
+        ? 'The Government provides various schemes like PM-Kisan (₹6000/year) and Sub-Mission on Agricultural Mechanization (up to 80% subsidy). Visit our "Gov Portal" section.'
+        : 'அரசாங்கம் PM-Kisan (₹6000/வருடம்) மற்றும் வேளாண் இயந்திரமயமாக்கல் (80% வரை மானியம்) போன்ற திட்டங்களை வழங்குகிறது. "அரசு போர்டல்" பகுதியை பார்வையிடவும்.';
+    }
+
+    // 4. Market / Prices
+    if (lowerQuery.match(/(price|market|sell|cost|விலை|சந்தை)/)) {
+      return lang === 'en'
+        ? 'Market prices fluctuate daily. Currently, Paddy is around ₹2,183/Qtl and Cotton is ₹7,020/Qtl. Check the "Market" tab for live updates.'
+        : 'சந்தை விலைகள் தினமும் மாறுகின்றன. தற்போது நெல் ₹2,183/Qtl, பருத்தி ₹7,020/Qtl. நேரடி தகவலுக்கு "சந்தை" பகுதியை பார்க்கவும்.';
+    }
+
+    // 5. Soil
+    if (lowerQuery.match(/(soil|ph|analyzer|மண்)/)) {
+      return lang === 'en'
+        ? 'Different crops need different soil. You can use our "Neural Soil Analyzer" to input your N, P, K, and pH levels to get crop recommendations!'
+        : 'பல்வேறு பயிர்களுக்கு வெவ்வேறு மண் தேவை. உங்கள் மண்ணின் N,P,K மற்றும் pH அளவுகளை உள்ளிட்டு பரிந்துரைகளை பெற "மண் பகுப்பாய்வி" யைப் பயன்படுத்தவும்!';
+    }
+
+    // 6. Specific Crops
+    const foundCrop = CROPS.find(c => lowerQuery.includes(c.name.en.toLowerCase()) || lowerQuery.includes(c.name.ta.toLowerCase()));
     if (foundCrop) {
-      if (query.includes('disease') || query.includes('நோய்')) {
+      if (lowerQuery.match(/(disease|நோய்)/)) {
         return lang === 'en' 
-          ? `Common diseases for ${foundCrop.name.en} include ${foundCrop.diseases.map(d => d.name.en).join(', ')}. Check the Crop Diagnosis section for more.`
-          : `${foundCrop.name.ta} பயிருக்கு பொதுவான நோய்கள்: ${foundCrop.diseases.map(d => d.name.ta).join(', ')}. மேலும் விவரங்களுக்கு 'பயிர் பரிசோதனை' பகுதியை பார்க்கவும்.`;
-      }
-      if (query.includes('water') || query.includes('நீர்')) {
-        return lang === 'en' 
-          ? `${foundCrop.name.en} requires ${foundCrop.guide.water.en} irrigation.` 
-          : `${foundCrop.name.ta} பயிருக்கு ${foundCrop.guide.water.ta} நீர் தேவைப்படுகிறது.`;
+          ? `Common diseases for ${foundCrop.name.en} are ${foundCrop.diseases.map(d => d.name.en).join(', ')}.`
+          : `${foundCrop.name.ta} பயிருக்கு பொதுவான நோய்கள்: ${foundCrop.diseases.map(d => d.name.ta).join(', ')}.`;
       }
       return lang === 'en' 
-        ? `I have data on ${foundCrop.name.en}. It grows best in ${foundCrop.guide.soil.en} during ${foundCrop.guide.season.en}.` 
-        : `${foundCrop.name.ta} பற்றிய தகவல் என்னிடம் உள்ளது. இது ${foundCrop.guide.soil.ta} மண்ணில் ${foundCrop.guide.season.ta} காலத்தில் சிறப்பாக வளரும்.`;
+        ? `${foundCrop.name.en} grows best in ${foundCrop.guide.soil.en} during ${foundCrop.guide.season.en}. Needs ${foundCrop.guide.water.en} watering.` 
+        : `${foundCrop.name.ta} ${foundCrop.guide.soil.ta} மண்ணில் ${foundCrop.guide.season.ta} காலத்தில் சிறப்பாக வளரும். ${foundCrop.guide.water.ta} நீர் தேவை.`;
     }
 
-    if (query.includes('weather') || query.includes('வானிலை')) {
-      return lang === 'en' ? 'The weather is currently sunny (32°C). Great for harvesting!' : 'வானிலை தற்போது வெயிலாக (32°C) உள்ளது. அறுவடைக்கு ஏற்றது!';
-    }
-
+    // Default
     return lang === 'en' 
-      ? "I'm not sure about that. Try asking about specific crops like Tomato, Paddy, or Mango!" 
-      : "மன்னிக்கவும், அது பற்றி எனக்குத் தெரியவில்லை. தக்காளி, நெல் அல்லது மாம்பழம் போன்ற பயிர்களைப் பற்றி கேட்டுப் பாருங்கள்!";
+      ? "I specialize in smart farming. Try asking about 'Fertilizers', 'Market Prices', 'Soil', or 'Crop Diseases'." 
+      : "நான் விவசாயத் தகவல்களில் நிபுணர். 'உரங்கள்', 'சந்தை விலை', 'மண்', அல்லது 'பயிர் நோய்கள்' பற்றி கேளுங்கள்.";
   };
 
   return (
@@ -143,6 +166,25 @@ const ChatBot = ({ lang }) => {
 
             {/* Input Area */}
             <div className="p-4 bg-dark-accent border-t border-white/5">
+              {/* Quick Suggestions */}
+              <div className="flex gap-2 mb-3 overflow-x-auto custom-scrollbar pb-1">
+                {(lang === 'en' 
+                  ? ['Fertilizers', 'Crop Disease', 'Gov Subsidy', 'Market Prices'] 
+                  : ['உரங்கள்', 'பயிர் நோய்', 'அரசு மானியம்', 'சந்தை விலை']
+                ).map((sug, i) => (
+                  <button 
+                    key={i}
+                    onClick={() => {
+                      setInput(sug);
+                      setTimeout(() => document.getElementById('chat-send-btn').click(), 100);
+                    }}
+                    className="whitespace-nowrap px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-[10px] font-bold rounded-full border border-emerald-500/30 transition-colors uppercase tracking-widest"
+                  >
+                    {sug}
+                  </button>
+                ))}
+              </div>
+
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -153,6 +195,7 @@ const ChatBot = ({ lang }) => {
                   className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs outline-none focus:border-emerald-500/50 transition-all font-medium"
                 />
                 <button 
+                  id="chat-send-btn"
                   onClick={handleSend}
                   className="p-3 bg-emerald-500 text-dark rounded-xl hover:bg-emerald-400 transition-colors shadow-lg shadow-emerald-500/20"
                 >
